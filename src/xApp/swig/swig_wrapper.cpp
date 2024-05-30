@@ -1133,7 +1133,8 @@ int report_kpm_sm(swig_global_e2_node_id_t* id, Interval inter_arg, std::vector<
   kpm_sub.ad = static_cast<kpm_act_def_t*>(calloc(1, sizeof(kpm_act_def_t)));
   assert(kpm_sub.ad != NULL && "Memory exhausted");
 
-  format_action_def_e act_type = FORMAT_4_ACTION_DEFINITION; // act_def.type
+  // format_action_def_e act_type = FORMAT_4_ACTION_DEFINITION; // act_def.type
+  format_action_def_e act_type = FORMAT_1_ACTION_DEFINITION; // act_def.type
 
   *kpm_sub.ad = gen_act_def(const_cast<const char**>(c_action), act_type);
   // TODO: need to fix, initialize kpm_sub with 0 value
