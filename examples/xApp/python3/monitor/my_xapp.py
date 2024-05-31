@@ -9,25 +9,28 @@ class KPMCallback(ric.kpm_cb):
         ric.kpm_cb.__init__(self)
 
     def handle(self, ind):
+        print(self.__dict__)
         if ind.msg.type == ric.FORMAT_1_INDICATION_MESSAGE:
-            ind_frm1 = ind.msg.frm_1
-            for index, meas_data in enumerate(ind_frm1.meas_data_lst):
-                print(f"meas data idx {index}")
-                if meas_data.incomplete_flag == ric.TRUE_ENUM_VALUE:
-                    print(f"<<< Measurement Record not reliable >>> ")
-                for meas_record in meas_data.meas_record_lst:
-                    if meas_record.value == ric.INTEGER_MEAS_VALUE:
-                        print_value = meas_record.int_val
-                    elif meas_record.value == ric.REAL_MEAS_VALUE:
-                        print_value = meas_record.real_val
-                    elif meas_record.value == ric.NO_VALUE_MEAS_VALUE:
-                        print_value = meas_record.no_value
-                    else:
-                        print_value = 0
-                        print(f"unknown meas_record")
-                    print(print_value)
+            ind_msg = ind.msg.frm_1
         else:
             print(f"unknow message type:{ind.msg.type}")
+            return
+
+        for index, meas_data in enumerate(ind_msg.meas_data_lst):
+            print(f"meas data idx {index}")
+            if meas_data.incomplete_flag == ric.TRUE_ENUM_VALUE:
+                print(f"<<< Measurement Record not reliable >>> ")
+            for meas_record in meas_data.meas_record_lst:
+                if meas_record.value == ric.INTEGER_MEAS_VALUE:
+                    print_value = meas_record.int_val
+                elif meas_record.value == ric.REAL_MEAS_VALUE:
+                    print_value = meas_record.real_val
+                elif meas_record.value == ric.NO_VALUE_MEAS_VALUE:
+                    print_value = meas_record.no_value
+                else:
+                    print_value = 0
+                    print(f"unknown meas_record")
+                print(print_value)
 
 def get_oran_tti(tti):
     if tti == 1:
@@ -51,7 +54,7 @@ def main():
     e2_conns = ric.conn_e2_nodes()
     assert(len(e2_conns) > 0)
     for idx, conn in enumerate(e2_conns):
-        print(f"Global E2 Node [{idx}]: PLMN MCC={conn.id.plmn.mcc} MNC={conn.id.plmn.mnc}")
+        print(f"Global E2 Node [{idx}]: PLMN {conn.id.plmn.mcc}.{conn.id.plmn.mnc}")
         if conn.id.type != ric.e2ap_ngran_gNB:
             continue
         for sm_info in ric.get_oran_sm_conf():
