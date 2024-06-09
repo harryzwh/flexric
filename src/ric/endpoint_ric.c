@@ -67,6 +67,9 @@ int init_sctp_conn_server(const char* addr, int port)
                                        .sctp_shutdown_event = 1};
 
   rc = setsockopt(server_fd, IPPROTO_SCTP, SCTP_EVENTS, &evnts, sizeof(evnts));
+  if(rc == -1){
+    printf("errno = %d\n", errno);
+  }
   assert(rc != -1);
 
   const int close_time = 0; // No automatic close https://www.rfc-editor.org/rfc/pdfrfc/rfc6458.txt.pdf p. 65
